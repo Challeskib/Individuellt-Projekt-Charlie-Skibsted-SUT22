@@ -9,6 +9,8 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
         static void Main(string[] args)
         {
+            
+            
             users = new string[5, 2];
             users[0, 0] = "Anders";
             users[0, 1] = "1234";
@@ -21,6 +23,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             users[4, 0] = "Fredrik";
             users[4, 1] = "5678";
 
+            Console.WriteLine("Välkommen till Varbergs Sparbank");
             RunInternetBank();
 
         }
