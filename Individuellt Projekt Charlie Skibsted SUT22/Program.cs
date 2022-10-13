@@ -49,7 +49,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             accountTitles[4, 1] = "Långsparkonto";
 
 
-            Console.WriteLine("Välkommen till Varbergs Sparbank");
+            
             RunInternetBank();
 
         }
@@ -91,6 +91,8 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         }
         static int GetLoggedInUser()
         {
+            Console.WriteLine("Välkommen till Varbergs Sparbank");
+
             int userId = 5;
 
             for (int i = 0; i < 3; i++) //Loop som ger tre försök till inlogg
@@ -102,7 +104,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
                 for (int j = 0; j < 5; j++) //Loop som jämför userName&&userPass med elementen i arrayen.
                 {
-                    if (users[j, 0] == userName && users[j, 1] == userPass) //Sök efter användaren
+                    if (users[j, 0] == userName && users[j, 1] == userPass) //Om elementen i Array stämmer överens med input
                     {
                         userId = j;
                         i = 3;
@@ -110,6 +112,12 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                     }
                 }
             }
+            if (userId == 5)
+            {
+                Console.WriteLine("Tyvärr, du har slagit fel användarnamn eller lösenord tre gånger." +
+                    "vänligen starta om programmet");
+            }
+
             return userId;
         }
         static decimal[,] TransferMoney(int userId)
