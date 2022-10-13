@@ -9,7 +9,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         static decimal[,] accountBalance;
         static string[,] accountTitles;
 
-
         static void Main(string[] args)
         {
             users = new string[5, 2]; //Instansierar och tilldelar 2d array, userId och passWord
@@ -48,8 +47,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             accountTitles[4, 0] = "Privatkonto";
             accountTitles[4, 1] = "Långsparkonto";
 
-
-            
             RunInternetBank();
 
         }
@@ -59,8 +56,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         {
             int userId = GetLoggedInUser(); //Logga in och lagra kundnummer i accountNumber
 
-
-            while (userId < 5) //switch loop som körs sålänge vi har kundnummer mellan 0-4
+            while (userId < 5) // loop till switchen som körs sålänge vi har kundnummer mellan 0-4
             {
                 Console.WriteLine("1. Se dina konton och saldo ");
                 Console.WriteLine("2. Överföring mellan konton ");
@@ -69,19 +65,23 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
                 int switchNum = int.Parse(Console.ReadLine());
 
-                switch (switchNum)
+                switch (switchNum) //Switch menu
                 {
                     case 1:
                         PrintAllBalances(userId);
+                        ClickEnterToReturnToMenu();
                         break;
                     case 2:
                         TransferMoney(userId);
+                        ClickEnterToReturnToMenu();
                         break;
                     case 3:
                         WithDrawMoney(userId);
+                        ClickEnterToReturnToMenu();
                         break;
                     case 4:
                         userId = GetLoggedInUser();
+                        ClickEnterToReturnToMenu();
                         break;
                     default:
                         Console.WriteLine("Ogiltigt val");
@@ -106,7 +106,9 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 {
                     if (users[j, 0] == userName && users[j, 1] == userPass) //Om elementen i Array stämmer överens med input
                     {
-                        userId = j;
+                        userId = j; //userId får samma värde som J så att vi kan följa vilken användare som är inloggad
+
+                        //i och j får nya värden så vi hoppar ur looparna
                         i = 3;
                         j = 11;
                     }
@@ -120,7 +122,16 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
             return userId;
         }
-        static decimal[,] TransferMoney(int userId)
+
+        //static int CheckPin(int userId) //Metod för att endast kolla pin kod
+        //{
+
+
+
+
+        //}
+
+        static decimal[,] TransferMoney(int userId) //Metod för att föra över pengar mellan konton
         {
 
             PrintAllBalances(userId); //Printa ut kundens saldo med
@@ -146,25 +157,32 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             }
 
             Console.WriteLine("Dina nya saldon är: ");
-            Console.WriteLine(accountBalance[userId, 0]);
-            Console.WriteLine(accountBalance[userId, 1]);
+            PrintAllBalances(userId);
 
             return accountBalance;
 
         }
-        static decimal[,] WithDrawMoney(int userId)
+        static decimal[,] WithDrawMoney(int userId) //Metod för att ta ut pengar
         {
 
-            PrintBalance(userId);
+            
+            PrintAllBalances(userId);
+
+            Console.WriteLine("Från vilket konto vill du ta ut pengar ifrån?");
+            int fromAccount = int.Parse(Console.ReadLine());
+
 
             Console.WriteLine("Hur mycket pengar vill du ta ut?");
             int withdrawAmount = int.Parse(Console.ReadLine());
 
-            accountBalance[userId, 0] = accountBalance[userId, 0] - withdrawAmount;
+            fromAccount = fromAccount - 1;
+
+            accountBalance[userId, fromAccount] = accountBalance[userId, fromAccount] - withdrawAmount;
 
             Console.WriteLine($"Du har tagit ut {withdrawAmount} kronor");
 
-            PrintBalance(userId);
+            Console.WriteLine("Återstående mängd: ");
+            PrintBalance(userId, fromAccount);
 
             return accountBalance;
 
@@ -176,15 +194,20 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             Console.WriteLine($"1. {accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
             Console.WriteLine($"2. {accountTitles[userId, 1]} : {accountBalance[userId, 1]} kronor");
         }
-        static void PrintBalance(int userId) //Skriv ut personkonto saldo
+        static void PrintBalance(int userId, int fromAccount) //Skriv ut personkonto saldo
         {
 
-            Console.WriteLine($"{accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
+            Console.WriteLine($"{accountTitles[userId, fromAccount]} : {accountBalance[userId, fromAccount]} kronor");
 
 
         }
 
+        static void ClickEnterToReturnToMenu() //WriteLine metod för att ha mindre kod i huvudmenu
+        {
+            Console.WriteLine("Klicka enter för att komma till huvudmenyn");
+            Console.ReadLine();
 
+        }
 
 
 
