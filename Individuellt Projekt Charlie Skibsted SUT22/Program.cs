@@ -61,7 +61,8 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 Console.WriteLine("1. Se dina konton och saldo ");
                 Console.WriteLine("2. Överföring mellan konton ");
                 Console.WriteLine("3. Ta ut pengar ");
-                Console.WriteLine("4. Logga ut ");
+                Console.WriteLine("4. Sätt in pengar ");
+                Console.WriteLine("5. Logga ut ");
 
                 int switchNum = int.Parse(Console.ReadLine());
 
@@ -80,6 +81,10 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                         ClickEnterToReturnToMenu();
                         break;
                     case 4:
+                        InsertMoney(userId);
+                        ClickEnterToReturnToMenu();
+                        break;
+                    case 5:
                         userId = GetLoggedInUser();
                         ClickEnterToReturnToMenu();
                         break;
@@ -123,13 +128,34 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             return userId;
         }
 
-        //static int CheckPin(int userId) //Metod för att endast kolla pin kod
-        //{
+        static bool CheckPin(int userId) //Metod för att endast kolla pin kod
+        {
 
 
 
+            bool pinCorrect = false;
 
-        //}
+
+            for (int i = 0; i < 3; i++) //3 försök att skriva rätt pin
+            {
+                Console.WriteLine("Skriv din fyrasiffriga pinkod: ");
+                string userPass = Console.ReadLine();
+
+                if (users[userId, 1] == userPass) //Om elementen i Array stämmer överens med input så gör vi return
+                {
+                    pinCorrect = true;
+                    return pinCorrect; 
+                }
+
+                Console.WriteLine("Fel kod, pröva igen: ");
+            }
+
+
+            pinCorrect = false; //om vi kommer utanför for-loopen så har vi skrivit fel 3 gånger
+            return pinCorrect;
+
+
+        }
 
         static decimal[,] TransferMoney(int userId) //Metod för att föra över pengar mellan konton
         {
@@ -165,15 +191,21 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         static decimal[,] WithDrawMoney(int userId) //Metod för att ta ut pengar
         {
 
-            
+
             PrintAllBalances(userId);
 
             Console.WriteLine("Från vilket konto vill du ta ut pengar ifrån?");
             int fromAccount = int.Parse(Console.ReadLine());
 
-
             Console.WriteLine("Hur mycket pengar vill du ta ut?");
             int withdrawAmount = int.Parse(Console.ReadLine());
+
+            bool pinCodeCorrect = CheckPin(userId);
+
+            if (pinCodeCorrect == false)
+            {
+                return accountBalance;
+            }
 
             fromAccount = fromAccount - 1;
 
@@ -182,6 +214,32 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             Console.WriteLine($"Du har tagit ut {withdrawAmount} kronor");
 
             Console.WriteLine("Återstående mängd: ");
+            PrintBalance(userId, fromAccount);
+
+            return accountBalance;
+
+        }
+
+        static decimal[,] InsertMoney(int userId) //Metod för att ta ut pengar
+        {
+
+
+            PrintAllBalances(userId);
+
+            Console.WriteLine("Från vilket konto vill du sätta in pengar till ?");
+            int fromAccount = int.Parse(Console.ReadLine());
+
+
+            Console.WriteLine("Hur mycket pengar vill du sätta in? ");
+            int insertAmount = int.Parse(Console.ReadLine());
+
+            fromAccount = fromAccount - 1;
+
+            accountBalance[userId, fromAccount] = accountBalance[userId, fromAccount] + insertAmount;
+
+            Console.WriteLine($"Du har satt in {insertAmount} kronor ");
+
+            Console.WriteLine(" Mängd: ");
             PrintBalance(userId, fromAccount);
 
             return accountBalance;
@@ -208,7 +266,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             Console.ReadLine();
 
         }
-
 
 
     }
