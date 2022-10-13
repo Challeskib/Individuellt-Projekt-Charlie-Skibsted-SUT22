@@ -48,6 +48,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             accountTitles[4, 0] = "Privatkonto";
             accountTitles[4, 1] = "Långsparkonto";
 
+
             Console.WriteLine("Välkommen till Varbergs Sparbank");
             RunInternetBank();
 
@@ -71,12 +72,13 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 switch (switchNum)
                 {
                     case 1:
-                        PrintBalance(userId);
+                        PrintAllBalances(userId);
                         break;
                     case 2:
                         TransferMoney(userId);
                         break;
                     case 3:
+                        WithDrawMoney(userId);
                         break;
                     case 4:
                         userId = GetLoggedInUser();
@@ -89,7 +91,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         }
         static int GetLoggedInUser()
         {
-            int accountNumber = 5;
+            int userId = 5;
 
             for (int i = 0; i < 3; i++) //Loop som ger tre försök till inlogg
             {
@@ -102,18 +104,18 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 {
                     if (users[j, 0] == userName && users[j, 1] == userPass) //Sök efter användaren
                     {
-                        accountNumber = j;
+                        userId = j;
                         i = 3;
                         j = 11;
                     }
                 }
             }
-            return accountNumber;
+            return userId;
         }
-        static decimal[,] TransferMoney(int accountNumber)
+        static decimal[,] TransferMoney(int userId)
         {
 
-            PrintBalance(accountNumber); //Printa ut kundens saldo
+            PrintAllBalances(userId); //Printa ut kundens saldo med
 
             Console.WriteLine("Välj det konto du vill överföra ifrån: ");
             int fromAccount = int.Parse(Console.ReadLine());
@@ -126,27 +128,54 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
             if (fromAccount == 1 && toAccount == 2)
             {
-                accountBalance[accountNumber, 0] = accountBalance[accountNumber, 0] - transferSum;
-                accountBalance[accountNumber, 1] = accountBalance[accountNumber, 1] + transferSum;
+                accountBalance[userId, 0] = accountBalance[userId, 0] - transferSum;
+                accountBalance[userId, 1] = accountBalance[userId, 1] + transferSum;
             }
             else if (fromAccount == 2 && toAccount == 1)
             {
-                accountBalance[accountNumber, 0] = accountBalance[accountNumber, 0] + transferSum;
-                accountBalance[accountNumber, 1] = accountBalance[accountNumber, 1] - transferSum;
+                accountBalance[userId, 0] = accountBalance[userId, 0] + transferSum;
+                accountBalance[userId, 1] = accountBalance[userId, 1] - transferSum;
             }
 
             Console.WriteLine("Dina nya saldon är: ");
-            Console.WriteLine(accountBalance[accountNumber, 0]);
-            Console.WriteLine(accountBalance[accountNumber, 1]);
+            Console.WriteLine(accountBalance[userId, 0]);
+            Console.WriteLine(accountBalance[userId, 1]);
 
             return accountBalance;
 
         }
-        static void PrintBalance(int accountNumber) //Skriv ut konto saldon
+        static decimal[,] WithDrawMoney(int userId)
         {
-            Console.WriteLine($"1. {accountTitles[accountNumber, 0]} : {accountBalance[accountNumber, 0]} kronor");
-            Console.WriteLine($"2. {accountTitles[accountNumber, 1]} : {accountBalance[accountNumber, 1]} kronor");
+
+            PrintBalance(userId);
+
+            Console.WriteLine("Hur mycket pengar vill du ta ut?");
+            int withdrawAmount = int.Parse(Console.ReadLine());
+
+            accountBalance[userId, 0] = accountBalance[userId, 0] - withdrawAmount;
+
+            Console.WriteLine($"Du har tagit ut {withdrawAmount} kronor");
+
+            PrintBalance(userId);
+
+            return accountBalance;
+
         }
+
+
+        static void PrintAllBalances(int userId) //Skriv ut konto saldon
+        {
+            Console.WriteLine($"1. {accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
+            Console.WriteLine($"2. {accountTitles[userId, 1]} : {accountBalance[userId, 1]} kronor");
+        }
+        static void PrintBalance(int userId) //Skriv ut personkonto saldo
+        {
+
+            Console.WriteLine($"{accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
+
+
+        }
+
 
 
 
