@@ -23,9 +23,10 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             users[4, 0] = "Fredrik";
             users[4, 1] = "5678";
 
-            accountBalance = new decimal[5, 2];  //Instansierar och tilldelar 2d array för kontosaldon
+            accountBalance = new decimal[5, 5];  //Instansierar och tilldelar 2d array för kontosaldon
             accountBalance[0, 0] = 5000;
             accountBalance[0, 1] = 10000;
+            accountBalance[0, 2] = 10000;
             accountBalance[1, 0] = 7000;
             accountBalance[1, 1] = 100;
             accountBalance[2, 0] = 400;
@@ -100,6 +101,8 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
             int userId = 5;
 
+            bool errorMessage = false;
+
             for (int i = 0; i < 3; i++) //Loop som ger tre försök till inlogg
             {
                 Console.WriteLine("Skriv ditt användarnamn: ");
@@ -117,9 +120,19 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                         i = 3;
                         j = 11;
                     }
+                    else
+                    {
+                        errorMessage = true;
+                    }
+
+                }
+
+                if (errorMessage && i < 2) //felmeddelande som bara kommer de 2 första iterationerna i yttre loop.
+                {
+                    Console.WriteLine("Du har slagit fel användarnamn eller pinkod, försök igen!");
                 }
             }
-            if (userId == 5)
+            if (userId == 5) //felmeddelande som kommer efter 3 felaktiga inloggningsförsök
             {
                 Console.WriteLine("Tyvärr, du har slagit fel användarnamn eller lösenord tre gånger." +
                     "vänligen starta om programmet");
@@ -144,7 +157,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 if (users[userId, 1] == userPass) //Om elementen i Array stämmer överens med input så gör vi return
                 {
                     pinCorrect = true;
-                    return pinCorrect; 
+                    return pinCorrect;
                 }
 
                 Console.WriteLine("Fel kod, pröva igen: ");
@@ -162,14 +175,53 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
             PrintAllBalances(userId); //Printa ut kundens saldo med
 
-            Console.WriteLine("Välj det konto du vill överföra ifrån: ");
-            int fromAccount = int.Parse(Console.ReadLine());
+            //Skapar variablar utanför kodblock
+            int fromAccount = 0;
+            int toAccount = 0;
+            decimal transferSum = 0;
 
-            Console.WriteLine("Välj det konto du vill överföra till: ");
-            int toAccount = int.Parse(Console.ReadLine());
+            //initierar bools och tilldelar till false till TryParsemetod
+            bool parseSuccess = false;
 
-            Console.WriteLine("Välj summa du vill föra över: ");
-            decimal transferSum = decimal.Parse(Console.ReadLine());
+
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Välj det konto du vill överföra ifrån: ");
+                parseSuccess = int.TryParse(Console.ReadLine(), out fromAccount);
+
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
+
+            parseSuccess = false;
+
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Välj det konto du vill överföra till: ");
+                parseSuccess = int.TryParse(Console.ReadLine(), out toAccount);
+
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
+
+            parseSuccess = false;
+
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Välj summa du vill föra över: ");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out transferSum);
+
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
+
+
 
             if (fromAccount == 1 && toAccount == 2)
             {
