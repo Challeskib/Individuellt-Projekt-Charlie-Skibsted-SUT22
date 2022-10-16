@@ -26,27 +26,39 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             accountBalance = new decimal[5, 5];  //Instansierar och tilldelar 2d array för kontosaldon
             accountBalance[0, 0] = 5000;
             accountBalance[0, 1] = 10000;
-            accountBalance[0, 2] = 10000;
             accountBalance[1, 0] = 7000;
             accountBalance[1, 1] = 100;
             accountBalance[2, 0] = 400;
             accountBalance[2, 1] = 30000;
+            accountBalance[2, 2] = 500;
             accountBalance[3, 0] = 55000;
             accountBalance[3, 1] = 870000;
+            accountBalance[3, 2] = 5511;
+            accountBalance[3, 3] = 3322;
             accountBalance[4, 0] = 1000;
-            accountBalance[4, 1] = 20000;
+            accountBalance[4, 1] = 22;
+            accountBalance[4, 2] = 3333;
+            accountBalance[4, 3] = 9987;
+            accountBalance[4, 4] = 7890;
 
-            accountTitles = new string[5, 2]; //Instansierar och tilldelar 2d array för kontontitlar
+
+            accountTitles = new string[5, 5]; //Instansierar och tilldelar 2d array för kontontitlar
             accountTitles[0, 0] = "Privatkonto";
             accountTitles[0, 1] = "Sparkonto";
             accountTitles[1, 0] = "Privatkonto";
             accountTitles[1, 1] = "Studiekonto";
             accountTitles[2, 0] = "Privatkonto";
             accountTitles[2, 1] = "Pensionskonto";
+            accountTitles[2, 2] = "ISK-Konto";
             accountTitles[3, 0] = "Privatkonto";
-            accountTitles[3, 1] = "Övrigt konto";
+            accountTitles[3, 1] = "Långsparkonto";
+            accountTitles[3, 2] = "Sparkonto";
+            accountTitles[3, 3] = "ISK-Konto";
             accountTitles[4, 0] = "Privatkonto";
             accountTitles[4, 1] = "Långsparkonto";
+            accountTitles[4, 2] = "Sparkonto";
+            accountTitles[4, 3] = "ISK-Konto";
+            accountTitles[4, 4] = "Övrigt konto";
 
             RunInternetBank();
         }
@@ -226,16 +238,25 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 }
             }
 
-            if (fromAccount == 1 && toAccount == 2)
+            fromAccount = fromAccount - 1;
+            toAccount = toAccount - 1;
+
+            if (transferSum > fromAccount)
             {
-                accountBalance[userId, 0] = accountBalance[userId, 0] - transferSum;
-                accountBalance[userId, 1] = accountBalance[userId, 1] + transferSum;
+                Console.WriteLine("Du kan inte överföra mer pengar än vad du har på kontot!");
+                return accountBalance;
             }
-            else if (fromAccount == 2 && toAccount == 1)
+            else if (transferSum < 0)
             {
-                accountBalance[userId, 0] = accountBalance[userId, 0] + transferSum;
-                accountBalance[userId, 1] = accountBalance[userId, 1] - transferSum;
+                Console.WriteLine("Du kan inte skriva minus saldon");
+                return accountBalance;
             }
+
+
+            accountBalance[userId, fromAccount] = accountBalance[userId, fromAccount] - transferSum;
+            accountBalance[userId, toAccount] = accountBalance[userId, toAccount] + transferSum;
+
+
 
             Console.WriteLine("Dina nya saldon är: ");
             PrintAllBalances(userId);
@@ -274,6 +295,18 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                     Console.WriteLine("Du måste skriva en siffra, försök igen! ");
                 }
             }
+
+            if (withdrawAmount > fromAccount)
+            {
+                Console.WriteLine("Du kan inte överföra mer pengar än vad du har på kontot");
+                return accountBalance;
+            }
+            else if (withdrawAmount < 0)
+            {
+                Console.WriteLine("Du kan inte skriva minus saldon");
+                return accountBalance;
+            }
+
 
             bool pinCodeCorrect = CheckPin(userId);
 
@@ -326,6 +359,12 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 }
             }
 
+            if (insertAmount < 0)
+            {
+                Console.WriteLine("Du kan inte skriva minus saldon");
+                return accountBalance;
+            }
+
             fromAccount = fromAccount - 1;
 
             accountBalance[userId, fromAccount] = accountBalance[userId, fromAccount] + insertAmount;
@@ -341,8 +380,17 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
         static void PrintAllBalances(int userId) //Skriv ut konto saldon
         {
-            Console.WriteLine($"1. {accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
-            Console.WriteLine($"2. {accountTitles[userId, 1]} : {accountBalance[userId, 1]} kronor");
+            //Console.WriteLine($"1. {accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
+            //Console.WriteLine($"2. {accountTitles[userId, 1]} : {accountBalance[userId, 1]} kronor");
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (accountBalance[userId, i] != 0)
+                {
+                    Console.WriteLine($"{i+1}. {accountTitles[userId, i]} : {accountBalance[userId, i]} kronor");
+                }
+            }
+
         }
         static void PrintBalance(int userId, int fromAccount) //Skriv ut personkonto saldo
         {
