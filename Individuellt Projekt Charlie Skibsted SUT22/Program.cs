@@ -49,9 +49,7 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             accountTitles[4, 1] = "Långsparkonto";
 
             RunInternetBank();
-
         }
-
 
         static void RunInternetBank() // Metod som kör switch meny för banken
         {
@@ -160,7 +158,15 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                     return pinCorrect;
                 }
 
-                Console.WriteLine("Fel kod, pröva igen: ");
+                if (i < 2)
+                {
+                    Console.WriteLine("Fel kod, pröva igen: ");
+                }
+                else
+                {
+                    Console.WriteLine("Du har slagit fel pinkod 3 gånger");
+                }
+
             }
 
 
@@ -182,7 +188,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
             //initierar bools och tilldelar till false till TryParsemetod
             bool parseSuccess = false;
-
 
             while (parseSuccess == false)
             {
@@ -221,8 +226,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
                 }
             }
 
-
-
             if (fromAccount == 1 && toAccount == 2)
             {
                 accountBalance[userId, 0] = accountBalance[userId, 0] - transferSum;
@@ -238,19 +241,39 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             PrintAllBalances(userId);
 
             return accountBalance;
-
         }
         static decimal[,] WithDrawMoney(int userId) //Metod för att ta ut pengar
         {
 
+            bool parseSuccess = false;
+            int fromAccount = 0;
+            decimal withdrawAmount = 0;
 
             PrintAllBalances(userId);
 
-            Console.WriteLine("Från vilket konto vill du ta ut pengar ifrån?");
-            int fromAccount = int.Parse(Console.ReadLine());
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Från vilket konto vill du ta ut pengar ifrån?");
+                parseSuccess = int.TryParse(Console.ReadLine(), out fromAccount);
 
-            Console.WriteLine("Hur mycket pengar vill du ta ut?");
-            int withdrawAmount = int.Parse(Console.ReadLine());
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
+
+            parseSuccess = false;
+
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Hur mycket pengar vill du ta ut?");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out withdrawAmount);
+
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
 
             bool pinCodeCorrect = CheckPin(userId);
 
@@ -269,21 +292,39 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
             PrintBalance(userId, fromAccount);
 
             return accountBalance;
-
         }
 
         static decimal[,] InsertMoney(int userId) //Metod för att ta ut pengar
         {
-
-
             PrintAllBalances(userId);
 
-            Console.WriteLine("Från vilket konto vill du sätta in pengar till ?");
-            int fromAccount = int.Parse(Console.ReadLine());
+            int fromAccount = 0;
+            bool parseSuccess = false;
+            decimal insertAmount = 0;
 
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Från vilket konto vill du sätta in pengar till? ");
+                parseSuccess = int.TryParse(Console.ReadLine(), out fromAccount);
 
-            Console.WriteLine("Hur mycket pengar vill du sätta in? ");
-            int insertAmount = int.Parse(Console.ReadLine());
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
+
+            parseSuccess = false;
+
+            while (parseSuccess == false)
+            {
+                Console.WriteLine("Hur mycket pengar vill du sätta in? ");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out insertAmount);
+
+                if (parseSuccess == false)
+                {
+                    Console.WriteLine("Du måste skriva en siffra, försök igen! ");
+                }
+            }
 
             fromAccount = fromAccount - 1;
 
@@ -298,7 +339,6 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
 
         }
 
-
         static void PrintAllBalances(int userId) //Skriv ut konto saldon
         {
             Console.WriteLine($"1. {accountTitles[userId, 0]} : {accountBalance[userId, 0]} kronor");
@@ -306,19 +346,14 @@ namespace Individuellt_Projekt_Charlie_Skibsted_SUT22
         }
         static void PrintBalance(int userId, int fromAccount) //Skriv ut personkonto saldo
         {
-
             Console.WriteLine($"{accountTitles[userId, fromAccount]} : {accountBalance[userId, fromAccount]} kronor");
-
-
         }
 
         static void ClickEnterToReturnToMenu() //WriteLine metod för att ha mindre kod i huvudmenu
         {
             Console.WriteLine("Klicka enter för att komma till huvudmenyn");
             Console.ReadLine();
-
         }
-
 
     }
 }
